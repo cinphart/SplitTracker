@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">SplitTracker</string>
+    <string name="pool_size">Pool Size</string>
+    <string name="race_length">Race Length</string>
+    <string name="time_goal">Time Goal</string>
+    <string name="time_display">%1$02d:%2$02d.%3$02d</string>
+    <string name="no_time_display">--:--.--</string>
+    <string name="split_button_label">Split</string>
+    <string name="last_lap_button_label">Last Lap</string>
+    <string name="finished_button_label">Finished</string>
+    <string name="distance">%1$.1f%2$s</string>
+    <string name="pool_size_scy">SCY (25yd)</string>
+    <string name="pool_size_lcm">LCM (50m)</string>
+    <string name="unit_yards">yd</string>
+    <string name="unit_meters">m</string>
+    <string name="final_card">&#9632;&#9632;</string>
+    <string-array name="pool_sizes">
+        <item>25 Yard (SCY)</item>
+        <item>50 Meter (LCM)</item>
+    </string-array>
+    <string-array name="races_scy">
+        <item>500 Yards</item>
+        <item>1000 Yards</item>
+        <item>1650 Yards</item>
+    </string-array>
+    <string-array name="races_lcm">
+        <item>400 Meters</item>
+        <item>800 Meters</item>
+        <item>1500 Meters</item>
+    </string-array>
+</resources>
