@@ -23,10 +23,10 @@ class TrackActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState?.containsKey("event")==true) {
-            event = savedInstanceState?.getSerializable("event") as EventModel
+            event = savedInstanceState.getSerializable("event") as EventModel
         } else {
             val raceModel = intent.getSerializableExtra(RACE_MODEL) as RaceModel
-            val splitsAt = Array(raceModel?.splits().toInt() + 1) { 0L }
+            val splitsAt = Array(raceModel.splits() + 1) { 0L }
             splitsAt[0] = intent.getLongExtra(STARTED_AT, 0L)
             event = EventModel(raceModel, splitsAt)
         }
@@ -50,7 +50,7 @@ class TrackActivity : AppCompatActivity(), View.OnClickListener {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         if (savedInstanceState?.containsKey("event")==true) {
-            event = savedInstanceState?.getSerializable("event") as EventModel
+            event = savedInstanceState.getSerializable("event") as EventModel
         }
     }
 
@@ -124,7 +124,10 @@ class TrackActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun oopsPlus(now: Long) : Unit = TODO()
+    private fun oopsPlus(now: Long) {
+        event.oopsPlus(now)
+        updateView()
+    }
 
     private fun oopsMinus(now: Long) {
         event.oopsMinus(now)

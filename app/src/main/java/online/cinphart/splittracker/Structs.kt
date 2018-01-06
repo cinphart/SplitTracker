@@ -2,10 +2,6 @@ package online.cinphart.splittracker
 
 import java.io.Serializable
 
-/**
- * Created by cinph on 11/26/2017.
- */
-
 enum class PoolSize(val resourceId : Int, val unit : Int, val size : Int, val distances : Array<Double>) {
     SCY(R.string.pool_size_scy, R.string.unit_yards, 25, arrayOf(500.0,1000.0,1650.0) ),
     LCM(R.string.pool_size_lcm, R.string.unit_meters, 50, arrayOf(400.0, 800.0, 1500.0))
@@ -30,25 +26,37 @@ data class EventModel(val raceModel : RaceModel,
         splits[++currentSplit] = now
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun oopsMinus(now : Long) {
         if (currentSplit > 0) {
             currentSplit--
         }
     }
 
-    fun oopsPlus(now : Long) : Unit = TODO()
+    fun oopsPlus(now : Long) {
+        // They already turned, they must have been faster than average, so use now
+        if (now - lastSplitAt() < splitAverage()) {
+            splitAt(now)
+        } else {
+            // It's past their average time, so just assume the average for this split.
+            splitAt(now + splitAverage())
+        }
+    }
 
-    fun stateAt(now : Long) : InstantaneousSnapshot =
-            InstantaneousSnapshot(
-                    elapsed_race_time = seconds(now - startedAt()),
-                    elapsed_split_time = seconds(now - lastSplitAt()),
-                    estimated_distance_swam = estimateDistance(now),
-                    splits_completed = currentSplit,
-                    race_complete = currentSplit == raceModel.splits(),
-                    last_lap = currentSplit == raceModel.splits()-1,
-                    card_number = (currentSplit * 2) + 1,
-                    expected_finish_time = seconds(estimatedTimeToComplete()),
-                    expected_split_time = seconds(splitAverage()))
+    fun stateAt(now : Long) : InstantaneousSnapshot {
+        val race_complete = currentSplit == raceModel.splits()
+        val timeToUse = if (race_complete) lastSplitAt() else now
+        return InstantaneousSnapshot(
+                elapsed_race_time = seconds(timeToUse - startedAt()),
+                elapsed_split_time = seconds(timeToUse - lastSplitAt()),
+                estimated_distance_swam = estimateDistance(timeToUse),
+                splits_completed = currentSplit,
+                race_complete = race_complete,
+                last_lap = currentSplit == raceModel.splits() - 1,
+                card_number = (currentSplit * 2) + 1,
+                expected_finish_time = seconds(estimatedTimeToComplete()),
+                expected_split_time = seconds(splitAverage()))
+    }
 
     fun lastSplitAt() : Long = splits[currentSplit]
 

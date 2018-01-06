@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.os.SystemClock
+import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -107,10 +108,34 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Nu
     }
 
     override fun onClick(v: View?) {
-        val startedAt = SystemClock.elapsedRealtime()
-        val intent = Intent(this, TrackActivity::class.java)
-        intent.putExtra(TrackActivity.RACE_MODEL, model.copy())
-        intent.putExtra(TrackActivity.STARTED_AT, startedAt)
-        startActivity(intent)
+        startTracking(SystemClock.elapsedRealtime())
+    }
+
+    private fun startTracking(startedAt: Long) {
+        if (start.isEnabled) {
+            val intent = Intent(this, TrackActivity::class.java)
+            intent.putExtra(TrackActivity.RACE_MODEL, model.copy())
+            intent.putExtra(TrackActivity.STARTED_AT, startedAt)
+            startActivity(intent)
+        }
+    }
+
+    // This uses the volume keys to trigger a split to be seen.
+    override fun onKeyLongPress(keyCode: Int, event: KeyEvent?): Boolean {
+        val now = SystemClock.elapsedRealtime()
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            startTracking(now)
+            return true
+        }
+        return super.onKeyLongPress(keyCode, event)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val now = SystemClock.elapsedRealtime()
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            startTracking(now)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
